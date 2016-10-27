@@ -1,5 +1,5 @@
 class ItemsController < ApplicationController
-    before_action :find_item, only: [:show, :edit, :update, :destroy]
+    before_action :find_item, only: [:show, :edit, :update, :destroy, :complete]
     
     def index
         @items = Item.all.order("created_at DESC" )
@@ -10,6 +10,8 @@ class ItemsController < ApplicationController
     end
     
     def create
+        @item = Item.new(item_params)
+
         if @item.save
             redirect_to root_path
         else 
@@ -33,6 +35,11 @@ class ItemsController < ApplicationController
     
     def destroy
         @item.destroy
+        redirect_to root_path
+    end
+    
+    def complete
+        @item.update_attribute(:completed_at, Time.now)
         redirect_to root_path
     end
     private
